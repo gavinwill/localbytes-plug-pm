@@ -1,28 +1,6 @@
 # About
 
-This is an ESPHome firmware for the Localbytes smart plug, which was originally sold pre-loaded with tasmota. This firmware supports the original 10A plug and the upgraded 13A plug. <a href="https://www.mylocalbytes.com/products/smart-plug-pm?variant=41600621510847">You can buy these smart plugs here</a>.
-
-## Installation
-
-You can use the following YAML to create the firmware in ESPHome. If converting from tastmota, you will need to compile and flash the [minimal](https://github.com/JamesSwift/localbytes-plug-pm/blob/main/minimal.yaml) firmware first as an intermediary step, as the full firmware file is too big to fit on the device alongside tasmota.
-
-```yaml
-substitutions:
-  name: localbytes-plug-pm-<NAME>
-  friendly_name: LocalBytes Plug PM <NAME>
-
-packages:
-  jamesswift.localbytes-plug-pm: github://JamesSwift/localbytes-plug-pm/localbytes-plug-pm.yaml@main
-
-esphome:
-  name: ${name}
-  name_add_mac_suffix: false
-  friendly_name: ${friendly_name}
-
-wifi:
-  ssid: !secret wifi_ssid
-  password: !secret wifi_password
-```
+This is an ESPHome firmware for the Localbytes smart plug, which is sold pre-loaded with tasmota. This firmware supports the original 10A plug and the upgraded 13A plug. <a href="https://www.mylocalbytes.com/products/smart-plug-pm?variant=41600621510847">You can buy these smart plugs here</a>.
 
 # Features
 
@@ -38,8 +16,23 @@ wifi:
 <img src="https://user-images.githubusercontent.com/2080205/168430744-598f9d21-c1ce-4fce-9076-8fca26c62be8.png" width="45%" />
 <img src="https://user-images.githubusercontent.com/2080205/168430637-ae9f14c6-57a8-4f3f-8a85-1f35966b43bd.png" width="45%" />
 
+
+
+
+# Installation
+
+To flash the ESPHome firmware over tasmota, first flash the <a href="https://github.com/JamesSwift/localbytes-plug-pm/releases/latest/download/minimal.bin">ESPHome minimal</a> firmware using the tasmota web interface (as the full firmware is too big to fit in the free space left by tasmota). Then connect to the wifi hotspot that is created and enter your network's wifi details. 
+
+At this point you can use the "dashboard import" feature of esphome to take ownership of the device. The next time you hit install/update via the dashboard, the full firmware will be uploaded to the plug. 
+
+Alternatively, if you don't want to import the plug to your ESPHome dashboard, connect to the hotpsot the device creates and use the web UI to flash the <a href="https://github.com/JamesSwift/localbytes-plug-pm/releases/latest/download/localbytes-plug-pm.bin">full firmware</a> from the latest release.
+
+# Firmware File Too Big
+
+A minimal firmware is provided as an intermiediary step, as there isn't enough space on the factory smart plugs to store the new full firmware while it is being flashed. Some users have reported that even this minimal firmware is still too large. If this is the case, you can try flashing the <a href="http://ota.tasmota.com/tasmota/release/tasmota-minimal.bin.gz">Tasmota minimal</a> firmware instead. Then flash the <a href="https://github.com/JamesSwift/localbytes-plug-pm/releases/latest/download/localbytes-plug-pm.bin">full firmware</a> afterwards. 
+
 # Calibration
 
-Once you have built and flashed the new firmware onto your smart plug and connected it to home assistant, you may wish to calibrate your plug to improve it's accuracy. To calibrate your plug, you need another "known-good" smart plug or a calibration device.
+Once you have flashed the new firmware onto your smart plug and connected it to home assistant, you may wish to calibrate your plug to improve it's accuracy. To calibrate your plug, you need another "known-good" smart plug or a calibration device.
 
 Plug your new smart plug into the known-good smart plug, then plug a kettle, toaster, or other high-power appliance into it. From home assistant, go to `Developer Tools` > `Services`. Use the services `calibrate_current`, `calibrate_power`, and `calibrate_voltage` to report the real readings as given from the "known-good" device. (Don't forget to turn on the kettle/toaster and leave it to stabilize it's power usage for a moment before starting to copy the readings).
